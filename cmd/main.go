@@ -2,8 +2,8 @@ package main
 
 import (
 	"flag"
-	"fmt"
 
+	"github.com/otherpirate/pdf-signature/internal/name"
 	"github.com/otherpirate/pdf-signature/internal/signature"
 )
 
@@ -15,8 +15,11 @@ func main() {
 	posY := flag.Float64("y", -1, "Y position where should be has the name")
 	flag.Parse()
 
-	fmt.Printf("%s - %s - %s - %f - %f", *fileImage, *fileName, *folderResult, *posX, *posY)
-	err := signature.Magic4(*fileImage, *folderResult, *posX, *posY)
+	names, err := name.GetNames(*fileName)
+	if err != nil {
+		panic(err)
+	}
+	err = signature.Signature(*fileImage, *folderResult, *posX, *posY, names)
 	if err != nil {
 		panic(err)
 	}
